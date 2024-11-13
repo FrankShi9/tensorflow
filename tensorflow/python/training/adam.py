@@ -22,7 +22,7 @@ from tensorflow.python.ops import resource_variable_ops
 from tensorflow.python.ops import state_ops
 from tensorflow.python.training import optimizer
 from tensorflow.python.util.tf_export import tf_export
-
+import tensorflow as tf
 
 @tf_export(v1=["train.AdamOptimizer"])
 class AdamOptimizer(optimizer.Optimizer):
@@ -112,6 +112,7 @@ class AdamOptimizer(optimizer.Optimizer):
       use_locking=False,
       name="Adam",
       use_own_namescope_for_non_slot_vars=False,
+      rand=False,
   ):
     r"""Construct a new Adam optimizer.
 
@@ -170,7 +171,8 @@ class AdamOptimizer(optimizer.Optimizer):
     self._beta1 = beta1
     self._beta2 = beta2
     self._epsilon = epsilon
-
+    if rand:
+      self._beta_2 *= tf.random.normal([1], 0, 0.4)
     # Tensor versions of the constructor arguments, created in _prepare().
     self._lr_t = None
     self._beta1_t = None
